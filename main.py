@@ -11,16 +11,31 @@ class Medicament(str, Enum):  # On definit une enumeration (Enum)  appelée Medi
 
 app = FastAPI()  # Creation de l'instance de l'application FastAPI.
 
-@app.get("/pharmacie/{etat}")  # Creation de route get accessible via l'URL /pharmacie/{etat}
-async def lire_pharmacie(etat: Pharmacies):
-        if etat == Pharmacies.OUVERT:
-                return {"etat": etat, "message": "La pharmacie Dafe est ouvert"}
-        elif etat == Pharmacies.FERME:
-                return {"etat": etat, "message": "La pharmacie est fermée"}
+# Exemple de "base de donnée" en memoire
+Pharmacies_db = [
+        {"nom": "Dafe", "ville": "Brazzaville", "etat": "ouvert"},
+        {"nom": "JAGGER", "ville": "Brazzaville", "etat": "ouvert"},
+        ]
+
+Medicament_db = [
+        {"nom": "Paracetamol", "disponible": "disponible},
+        {"nom": "Efferalgan", "disponibilité": "rupture_de_stock"},
+        ]
+
+@app.get("/pharmacie")  # Creation de route get accessible via l'URL /pharmacie
+async def lire_pharmacie_query(etat: Pharmacies = None, ville: str = None):   # On difinit les parametres de requete
+        result = pharmacies_db
+        if etat:
+            result = [p for p in result if p["etat"] == etat]
+        if ville:
+            result = [p for p in result if p["ville"].lower() == ville.lower()]
+        return {"pharamacies": result}
              
-@app.get("/medicament/{acces}")  # get accessible via L'URL acces
-async def lire_medicament(acces: Medicament):
-        if acces == Medicament.DISPONIBLE:
-                return {"acces": acces, "message": "Le medicament est disponible"}
-        elif acces == Medicament.RUPTURE_DE_STOCK:
-                return {"acces": acces, "message": "Le medicament est en rupture de stock"}
+@app.get("/medicament")  # get accessible via medicament
+async def lire_medicament_query(acces: Medicament = None, Disponible: str = None):
+        result = Medicament_db
+        if acces:
+                result = [p for p in result if p["acces"] = acces]
+        if Disponible:
+                result = [p for p in result if p["Disponible"].lower() == p["Disponible.lower()]
+        result {"Medicament": result}
